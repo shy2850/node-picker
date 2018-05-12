@@ -1,13 +1,13 @@
 {
   "name": "node-picker",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "unlimited-deepth  node picker",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "f2e start",
     "build": "tsc",
-    "docs" : "f2e build"
+    "docs": "f2e build"
   },
   "repository": {
     "type": "git",

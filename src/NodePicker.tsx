@@ -10,10 +10,11 @@ export interface PNode {
 // 所有参数，基于input的扩展
 export interface NodePickerProps {
     name?: string
+    className?: string
     placeholder?: string
     title?: string
     tree: PNode[]
-    // 判断到哪一集展现列表，而不是继续联动下拉框
+    // 判断到哪一级别展现选项，而不是继续联动下拉框
     isLastParent?: {
         (node: PNode): boolean
     }
@@ -97,13 +98,13 @@ export default class extends Component<NodePickerProps, NodePickerState> {
         })
     }
     render () {
-        const { name, title, placeholder, tree = [] } = this.props
+        const { name, className = '', title, placeholder, tree = [] } = this.props
         const { paths, node, active, keywords = '' } = this.state
         const { changeParent, onChange, toggleActive, changeKeywords } = this
 
         let children = tree
         return <span >
-            <input type="text" readOnly name={name} title={title} placeholder={placeholder} value={node && node.name} onClick={toggleActive}/>
+            <input type="text" className={className} readOnly name={name} title={title} placeholder={placeholder} value={node && node.name} onClick={toggleActive}/>
             <div className={`node-selector ${active ? 'is-active' : ''}`}>
                 <div className="selector-inner">
                     <div className="buttons-panel">
