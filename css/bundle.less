@@ -1,0 +1,82 @@
+@color: #d2d2d2;
+@font: #333;
+.node-selector {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    top: 0;
+    display: none;
+    color: @font;
+    background: rgba(0, 0, 0, .5);
+    font: normal 14px/1 'Simsun';
+    > .selector-inner {
+        position: relative;
+        width: 600px;
+        padding: 2em;
+        max-width: 100%;
+        margin: 60px auto 0;
+        background: #f8f8f8;
+        border: 1px solid @color;
+        box-shadow: 0 0 10px darken(@color, 10%);
+        transition: transform .3s linear;
+        transform: scale(0);
+    }
+    .button-close {
+        position: absolute;
+        right: 2em;
+        top: 2em;
+        font-size: 16px;
+        color: @font;
+        &:hover {
+            color: #c00;
+        }
+    }
+    .buttons-panel {
+        padding: 0 0 1.5em;
+        overflow: hidden;
+        > .inline-block {
+            float: left;
+            margin: 0 .5em 0 0;
+        }
+    }
+    .inline-block {
+        box-sizing: border-box;
+        padding: 6px;
+        height: 30px;
+        border: 1px solid @color;
+        border-radius: 5px;
+        color: @font;
+    }
+    input.inline-block {
+        transition: width .3s ease;
+        width: 120px;
+        &:focus {
+            width: 300px;
+        }
+    }
+    .item-panel {
+        height: 400px;
+        overflow: auto;
+        background: #fff;
+        border: 1px solid @color;
+        > a {
+            float: left;
+            padding: .5em .5em .5em 1em;
+            box-sizing: border-box;
+            width: 33.33%;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+    }
+    a {
+        text-decoration: none;
+    }
+    &.is-active {
+        display: block;
+        > div {
+            transform: scale(1);
+        }
+    }
+}
