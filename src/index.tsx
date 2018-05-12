@@ -13,4 +13,4 @@ allUnivList.map(c => {
 })
 
 const app = document.getElementById('app')
-render(<NodePicker name="node" tree={allUnivList}/>, app)
+render(<NodePicker name="node" placeholder="点击选择节点" tree={allUnivList}/>, app)
