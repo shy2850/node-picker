@@ -1,6 +1,6 @@
 {
   "name": "node-picker",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "unlimited-deepth  node picker",
   "main": "index.js",
   "scripts": {
@@ -31,7 +31,9 @@
   },
   "files": [
     "dist",
-    "src"
+    "src",
+    "css",
+    "docs"
   ],
   "module": "dist/NodePicker.js",
   "typings": "dist/NodePicker.d.ts",

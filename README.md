@@ -5,9 +5,10 @@ based on [preact](https://preactjs.com/)
 see demos [https://shy2850.github.io/node-picker/](https://shy2850.github.io/node-picker/)
 
 ## useage
+$ npm i node-picker
 ``` tsx
 import { render, h } from 'preact'
-import NodePicker, { PNode } from "./NodePicker"
+import NodePicker, { PNode } from "node-picker"
 
 const tree: PNode[] 
 const app = document.getElementById('app')
