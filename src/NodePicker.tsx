@@ -44,7 +44,6 @@ export default class extends Component<NodePickerProps, NodePickerState> {
 
         let node: PNode = { id: -1, name: '__root__', children: tree }
         let index = 0
-        console.log(paths)
         for(;index < paths.length; index++) {
             node = node.children.find(({ id }) => id === paths[index])
         }
