@@ -44,12 +44,14 @@ export default class extends Component<NodePickerProps, NodePickerState> {
 
         let node: PNode = { id: -1, name: '__root__', children: tree }
         let index = 0
+        console.log(paths)
         for(;index < paths.length; index++) {
-            node = node.children[paths[index]]
+            node = node.children.find(({ id }) => id === paths[index])
         }
         while (!isLastParent(node)) {
-            node = node.children[paths[index++] | 0]
+            node = node.children.find(({ id }) => id === paths[index]) || node.children[0]
             paths.push(node.id)
+            index++
         }
         this.setState({
             paths
@@ -108,7 +110,7 @@ export default class extends Component<NodePickerProps, NodePickerState> {
             <div className={`node-selector ${active ? 'is-active' : ''}`}>
                 <div className="selector-inner">
                     <div className="buttons-panel">
-                        {paths.map((id, i) => <select className="inline-block" onChange={(e) => changeParent(e.target, i)}>
+                        {paths.map((id, i) => <select key={`${i}`} className="inline-block" onChange={(e) => changeParent(e.target, i)}>
                             {children.map(item => {
                                 const selected = item.id === id;
                                 if (selected) {

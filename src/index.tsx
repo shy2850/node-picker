@@ -1,6 +1,7 @@
 import { render, h } from 'preact'
-import NodePicker from "./NodePicker"
+import NodePicker, { PNode } from "./NodePicker"
 
+declare var Area
 declare var allUnivList
 
 allUnivList.map(c => {
@@ -12,5 +13,24 @@ allUnivList.map(c => {
     return c
 })
 
+const AreaList = (function loop (area) {
+    return Object.keys(area).map(k => {
+        const [name, id] = k.split('_')
+        return id ? {
+            id: parseInt(id, 10) + 1,
+            name,
+            children: loop(area[k])
+        } : {
+            id: parseInt(area[k], 10) + 1,
+            name: k
+        }
+    })
+})(Area['亚洲_1']['中国_156'])
+
+console.log(AreaList)
+console.log(allUnivList)
 const app = document.getElementById('app')
-render(<NodePicker name="node" placeholder="点击选择节点" tree={allUnivList}/>, app)
+render(<div>
+    <NodePicker name="node-area" placeholder="点击选择地区" tree={AreaList} />
+    <NodePicker name="node-school" placeholder="点击选择学校" tree={allUnivList} />
+</div>, app)
