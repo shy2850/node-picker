@@ -2,7 +2,7 @@ import { render, h, Component, VNode } from 'preact'
 
 // 基础节点 id 为自然数
 export interface PNode {
-    id: number
+    id?: number
     name: string
     children?: PNode[]
 }
@@ -13,6 +13,7 @@ export interface NodePickerProps {
     className?: string
     placeholder?: string
     title?: string
+    style?: any
     tree: PNode[]
     // 判断到哪一级别展现选项，而不是继续联动下拉框
     isLastParent?: {
@@ -20,14 +21,14 @@ export interface NodePickerProps {
     }
     // 选中节点事件
     onChange?: {
-        (node: PNode): void
+        (node: PNode, paths: number[]): string
     }
 }
 
 // 组件内部使用的State
 export interface NodePickerState {
     paths?: number[]
-    node?: PNode
+    name?: string
     active: boolean
     keywords?: string
 }
@@ -37,19 +38,23 @@ export default class extends Component<NodePickerProps, NodePickerState> {
     isLastParent = (node: PNode): boolean => {
         return !node || !node.children || !node.children[0].children
     }
+    defaultChange = (node: PNode, paths: number[]): string => {
+        return node.name
+    }
 
     init = (paths = []) => {
         const { isLastParent } = this
         const { tree = [] } = this.props
 
-        let node: PNode = { id: -1, name: '__root__', children: tree }
+        let node: PNode = { name: '__root__', children: tree }
         let index = 0
         for(;index < paths.length; index++) {
-            node = node.children.find(({ id }) => id === paths[index])
+            node = node.children[paths[index]]
         }
         while (!isLastParent(node)) {
-            node = node.children.find(({ id }) => id === paths[index]) || node.children[0]
-            paths.push(node.id)
+            const n = paths[index] | 0
+            node = node.children[n]
+            paths.push(n)
             index++
         }
         this.setState({
@@ -85,11 +90,12 @@ export default class extends Component<NodePickerProps, NodePickerState> {
             active: !active
         })
     }
-    onChange = (node: PNode) => {
-        const { onChange } = this.props
-        onChange && onChange(node)
+    onPick = (node: PNode) => {
+        const { onChange = this.defaultChange } = this.props
+        const { paths } = this.state
+        const name = onChange(node, paths)
         this.setState({
-            node,
+            name,
             active: false
         })
     }
@@ -99,29 +105,29 @@ export default class extends Component<NodePickerProps, NodePickerState> {
         })
     }
     render () {
-        const { name, className = '', title, placeholder, tree = [] } = this.props
-        const { paths, node, active, keywords = '' } = this.state
-        const { changeParent, onChange, toggleActive, changeKeywords } = this
+        const { tree = [], onChange, isLastParent, ...props } = this.props
+        const { paths, name, active, keywords = '' } = this.state
+        const { changeParent, onPick, toggleActive, changeKeywords } = this
 
         let children = tree
         return <span >
-            <input type="text" className={className} readOnly name={name} title={title} placeholder={placeholder} value={node && node.name} onClick={toggleActive}/>
+            <input type="text" {...props} value={name} onClick={toggleActive}/>
             <div className={`node-selector ${active ? 'is-active' : ''}`}>
                 <div className="selector-inner">
                     <div className="buttons-panel">
-                        {paths.map((id, i) => <select key={`${i}`} className="inline-block" onChange={(e) => changeParent(e.target, i)}>
-                            {children.map(item => {
-                                const selected = item.id === id;
+                        {paths.map((index, i) => <select key={`${i}`} className="inline-block" onChange={(e) => changeParent(e.target, i)}>
+                            {children.map((item, value) => {
+                                const selected = value === index;
                                 if (selected) {
                                     children = item.children
                                 }
-                                return <option value={item.id} selected={selected}>{item.name}</option>
+                                return <option value={value} selected={selected}>{item.name}</option>
                             })}
                         </select>)}
                         <input type="text" className="inline-block" placeholder="quick search" onInput={changeKeywords}/>
                     </div>
                     <div className="item-panel">
-                        {children.map(n => n.name.indexOf(keywords) > -1 && <a href="javascript:;" onClick={() => onChange(n)}>{n.name}</a>)}
+                        {children.map(n => n.name.indexOf(keywords) > -1 && <a href="javascript:;" onClick={() => onPick(n)}>{n.name}</a>)}
                     </div>
                     <a href="javascript:;" className="button-close" onClick={toggleActive}>&times;</a>
                 </div>

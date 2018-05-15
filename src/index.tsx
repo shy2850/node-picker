@@ -31,6 +31,13 @@ console.log(AreaList)
 console.log(allUnivList)
 const app = document.getElementById('app')
 render(<div>
-    <NodePicker name="node-area" placeholder="点击选择地区" tree={AreaList} />
+    <NodePicker name="node-area" placeholder="点击选择地区" tree={AreaList} onChange={(node, paths) => {
+        let next = AreaList
+        return paths.map((i) => {
+            let res = next[i]
+            next = next[i].children
+            return res
+        }).concat(node).map(({name}) => name).join('-')
+    }} style={{width: 200}}/>
     <NodePicker name="node-school" placeholder="点击选择学校" tree={allUnivList} />
 </div>, app)
